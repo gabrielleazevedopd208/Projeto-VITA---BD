@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VITA — Profissionais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <script>
+        // Script Rápido para aplicar o tema antes da página carregar
+        const savedContrast = localStorage.getItem('vita-contrast-mode');
+        if (savedContrast === 'true') {
+            document.documentElement.classList.add('high-contrast');
+        }
+    </script>
+
+</head>
+<body>
+    <header>
+        <div class="logo"><h1>VITA</h1></div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="servicos.html">Serviços</a>
+            <a href="campanhas.html">Campanhas</a>
+            <a href="profissionais.html" class="active">Profissionais</a>
+            <a href="unidades.html">Unidades de Saúde</a>
+            <a href="quemsomos.html">Quem Somos</a>
+            <div class="accessibility-controls">
+                <button id="toggle-contrast" class="access-btn" title="Alto Contraste">C</button>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <div class="page-header">
+            <h2 class="page-title">Profissionais de Saúde</h2>
+            <p class="page-subtitle">Conheça os especialistas que atendem em nossa cidade e encontre o profissional certo para você.</p>
+        </div>
+        <div class="content-grid">
+            <div class="professional-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="Dra. Maria Souza">
+                <h3>Dra. Maria Souza</h3>
+                <p>Pediatria</p>
+                <a href="#" class="btn">Ver Perfil</a>
+            </div>
+            <div class="professional-card">
+                <img src="https://cdn-icons-png.flaticon.com/512/2922/2922656.png" alt="Dr. Paulo Silva">
+                <h3>Dr. Paulo Silva</h3>
+                <p>Clínico Geral</p>
+                <a href="#" class="btn">Ver Perfil</a>
+            </div>
+        </div>
+    </main>
+     <footer>VITA © 2025 — Projeto Educacional BD City Coders</footer>
+<script>
+    /*
+            AVISO: Este script controla a funcionalidade do botão de Acessibilidade ("C").
+            NÃO APAGUE SEUS LABUBU FILHO DO JACINTO
+        */
+        document.addEventListener('DOMContentLoaded', () => {
+            const body = document.body;
+            const btnContrast = document.getElementById('toggle-contrast');
+            const CONTRAST_KEY = 'vita-contrast-mode';
+            const savedContrast = localStorage.getItem(CONTRAST_KEY);
+
+            if (savedContrast === 'true') {
+                body.classList.add('high-contrast');
+            }
+            if(btnContrast) {
+                btnContrast.addEventListener('click', () => {
+                    const isContrastEnabled = body.classList.toggle('high-contrast');
+                    localStorage.setItem(CONTRAST_KEY, isContrastEnabled);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>
