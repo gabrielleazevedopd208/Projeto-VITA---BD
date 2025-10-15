@@ -208,7 +208,7 @@ body.high-contrast .badge.active {
 
 
 /* ==========================================================================
-   VITA | TEMPLATE PADRÃO E ESTILOS GERAIS
+   PARTE PADRAO PARA TODOS OS PERFIS CRIADOS
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -363,3 +363,4 @@ nav a.active, nav a:hover { color: var(--c-brand); background-color: #e8f0fe; }
     border-radius: var(--radius-lg);
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
 }
+
