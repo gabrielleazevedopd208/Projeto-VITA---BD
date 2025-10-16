@@ -20,9 +20,6 @@
             <a href="profissionais.html">Profissionais</a>
             <a href="unidades.html">Unidades de Saúde</a>
             <a href="quemsomos.html">Quem Somos</a>
-            <div class="accessibility-controls">
-                <button id="toggle-contrast" class="access-btn" title="Alto Contraste">C</button>
-            </div>
         </nav>
     </header>
 
@@ -107,24 +104,3 @@
     <footer style="text-align:center; padding:20px 0; margin-top:40px;">
         VITA © 2025 — Projeto Educacional BD City Coders
     </footer>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const body = document.documentElement;
-            const btnContrast = document.getElementById('toggle-contrast');
-            const CONTRAST_KEY = 'vita-contrast-mode';
-            
-            if (localStorage.getItem(CONTRAST_KEY) === 'true') {
-                body.classList.add('high-contrast');
-            }
-            
-            if (btnContrast) {
-                btnContrast.addEventListener('click', () => {
-                    const isEnabled = body.classList.toggle('high-contrast');
-                    localStorage.setItem(CONTRAST_KEY, isEnabled);
-                });
-            }
-        });
-    </script>
-</body>
-</html>
