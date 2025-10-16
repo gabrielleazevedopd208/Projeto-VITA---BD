@@ -25,31 +25,129 @@
         </nav>
     </header>
     <main>
-        <div class="page-header">
-            <h2 class="page-title">Serviços de Saúde</h2>
-            <p class="page-subtitle">Encontre o cuidado que você precisa. Explore as categorias de serviços disponíveis para a comunidade.</p>
-        </div>
-        <div class="content-grid">
-            <div class="card" style="text-align: center;">
-                <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <h3>Consultas</h3>
-                <p>Clínico Geral, Pediatria, Ginecologia e outras especialidades para cuidar de você e sua família.</p>
-                <a href="profissionais.html" class="btn">Ver Especialistas</a>
-            </div>
-            <div class="card" style="text-align: center;">
-                <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect height="18" rx="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="21" y1="10" y2="10"></line><path d="m9 16 2 2 4-4"></path></svg>
-                <h3>Vacinação</h3>
-                <p>Mantenha seu cartão de vacinas em dia com acesso a todas as doses do calendário nacional.</p>
-                <a href="campanhas.html" class="btn">Ver Campanhas</a>
-            </div>
-            <div class="card" style="text-align: center;">
-                <svg class="card-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-1.5 0-2.25 1.06-4 1.06C9.75 6.06 9 5 7.5 5 4.42 5 2 12.22 2 16.38c0 4.22 3 12.22 6 12.22 1.25 0 2.5-1.06 4-1.06Z"></path><path d="M12 6.06 12 21.06"></path></svg>
-                <h3>Saúde Mental</h3>
-                <p>Apoio psicológico para o bem-estar emocional de jovens, adultos e idosos.</p>
-                <a href="#" class="btn">Buscar Ajuda</a>
-            </div>
-        </div>
-    </main>
+    <section class="page-header">
+      <h2 class="page-title">Serviços de Saúde</h2>
+      <p class="page-subtitle">Encontre rapidamente o serviço que você precisa e veja onde ele está disponível em Bom Despacho.</p>
+    </section>
+
+    <!-- Barra de busca -->
+    <div style="text-align:center; margin-bottom: 2rem;">
+      <input id="searchInput" type="text" placeholder="Pesquisar serviço..." 
+             style="padding:0.8rem 1rem; width:90%; max-width:500px; border:1px solid #ddd; border-radius:50px; font-size:1rem;">
+    </div>
+
+    <!-- Categorias de serviços -->
+    <section id="categorias" class="content-grid">
+      <div class="card categoria" data-nome="consultas">
+        <h3>Consultas</h3>
+        <p>Clínico Geral, Pediatria, Ginecologia e outros atendimentos médicos.</p>
+      </div>
+      <div class="card categoria" data-nome="vacinacao">
+        <h3>Vacinação</h3>
+        <p>Calendário vacinal completo, locais e horários de atendimento.</p>
+      </div>
+      <div class="card categoria" data-nome="saude-mental">
+        <h3>Saúde Mental</h3>
+        <p>Atendimento psicológico e rodas de conversa.</p>
+      </div>
+      <div class="card categoria" data-nome="pre-natal">
+        <h3>Pré-Natal</h3>
+        <p>Acompanhamento especializado para gestantes.</p>
+      </div>
+      <div class="card categoria" data-nome="prevencao">
+        <h3>Prevenção</h3>
+        <p>Controle da dengue, doenças crônicas e outras ações preventivas.</p>
+      </div>
+    </section>
+
+    <!-- Detalhes do serviço -->
+    <section id="detalhes" style="display:none; margin-top:3rem;">
+      <div class="card" id="detalhesConteudo"></div>
+      <div style="text-align:center; margin-top:1.5rem;">
+        <button onclick="voltarCategorias()" class="btn">Voltar</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // --- Função de busca ---
+    const searchInput = document.getElementById('searchInput');
+    const categorias = document.querySelectorAll('.categoria');
+
+    searchInput.addEventListener('input', () => {
+      const termo = searchInput.value.toLowerCase();
+      categorias.forEach(cat => {
+        const nome = cat.querySelector('h3').textContent.toLowerCase();
+        cat.style.display = nome.includes(termo) ? 'block' : 'none';
+      });
+    });
+
+    // --- Funções de exibição de detalhes ---
+    const detalhes = document.getElementById('detalhes');
+    const detalhesConteudo = document.getElementById('detalhesConteudo');
+    const categoriasContainer = document.getElementById('categorias');
+
+    const infoServicos = {
+      "consultas": `
+        <h3>Consultas</h3>
+        <p><strong>Para quem:</strong> Toda a população.</p>
+        <p><strong>Onde:</strong> Unidades de Saúde da Família (USF) de todos os bairros.</p>
+        <p><strong>Como agendar:</strong> Procure a recepção da sua unidade ou agende pelo aplicativo da Prefeitura.</p>
+      `,
+      "vacinacao": `
+        <h3>Vacinação</h3>
+        <p><strong>Para quem:</strong> Crianças, adolescentes, adultos e idosos.</p>
+        <p><strong>Onde:</strong> USF Central, São Vicente, Aeroporto e Esplanada.</p>
+        <p><strong>Como agendar:</strong> De segunda a sexta, das 8h às 16h. Levar cartão de vacinação.</p>
+      `,
+      "saude-mental": `
+        <h3>Saúde Mental</h3>
+        <p><strong>Para quem:</strong> Pessoas que precisam de apoio psicológico ou emocional.</p>
+        <p><strong>Onde:</strong> CAPS I e nas rodas de conversa promovidas pelas unidades.</p>
+        <p><strong>Como agendar:</strong> Encaminhamento médico ou procura direta no CAPS.</p>
+      `,
+      "pre-natal": `
+        <h3>Pré-Natal</h3>
+        <p><strong>Para quem:</strong> Gestantes de qualquer idade.</p>
+        <p><strong>Onde:</strong> Todas as USFs e Hospital Municipal.</p>
+        <p><strong>Como agendar:</strong> Levar documento de identidade e cartão do SUS.</p>
+      `,
+      "prevencao": `
+        <h3>Prevenção</h3>
+        <p><strong>Para quem:</strong> População em geral.</p>
+        <p><strong>Onde:</strong> Unidades de Saúde e campanhas itinerantes.</p>
+        <p><strong>Como participar:</strong> Acompanhe o calendário no site da Prefeitura ou nas redes sociais da Secretaria de Saúde.</p>
+      `
+    };
+
+    categorias.forEach(cat => {
+      cat.addEventListener('click', () => {
+        const nome = cat.getAttribute('data-nome');
+        detalhesConteudo.innerHTML = infoServicos[nome];
+        categoriasContainer.style.display = 'none';
+        detalhes.style.display = 'block';
+      });
+    });
+
+    function voltarCategorias() {
+      detalhes.style.display = 'none';
+      categoriasContainer.style.display = 'grid';
+    }
+
+    // --- Acessibilidade: alto contraste ---
+    document.addEventListener('DOMContentLoaded', () => {
+      const btnContrast = document.getElementById('toggle-contrast');
+      const body = document.body;
+      const key = 'vita-contrast-mode';
+      const saved = localStorage.getItem(key);
+      if (saved === 'true') body.classList.add('high-contrast');
+      btnContrast.addEventListener('click', () => {
+        const active = body.classList.toggle('high-contrast');
+        localStorage.setItem(key, active);
+      });
+    });
+  </script>
+  
      <footer>VITA © 2025 — Projeto Educacional BD City Coders</footer>
 </body>
 </html>
