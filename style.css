@@ -90,6 +90,21 @@ nav a.active { color: var(--azul-vita); background-color: #DBEAFE; font-weight: 
 }
 .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3); }
 
+.curtir{
+     background-image: linear-gradient(to right, var(--azul-vita), var(--azul-escuro));
+    color: white;
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 99px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); /* Sombra soft */
+    display: inline-block;
+
+}
+
+
 /* 5. CARDS GERAIS (SOFT DESIGN) */
 .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
 .card {
@@ -109,6 +124,17 @@ nav a.active { color: var(--azul-vita); background-color: #DBEAFE; font-weight: 
 
 /* 6. ESTILOS ESPECÍFICOS DAS PÁGINAS */
 .hero { text-align: center; padding: 4rem 2rem; }
+.hero-img {
+ background: url("https://58b04f5940c1474e557e363a.redesign.static-01.com/l/images/f019c986796f198a8898bbe7825c83e35697834f.png") 
+              no-repeat center center/cover;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  margin-top: 80px; /* espaçamento do cabeçalho fixo */
+}
 .hero h2 { font-size: 3rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; }
 .home-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
 
