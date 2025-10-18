@@ -416,6 +416,16 @@ footer { text-align: center; padding: 3rem; margin-top: 3rem; color: var(--texto
         height: 100vh;
         margin: 0;
     }
+    /* Faz o rodapé ficar fixado no final da página */
+html, body {
+    height: 100%;
 }
 
+body {
+    display: flex;
+    flex-direction: column;
+}
 
+main {
+    flex: 1; /* Faz o conteúdo empurrar o rodapé pra baixo */
+}
