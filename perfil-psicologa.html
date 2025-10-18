@@ -159,69 +159,7 @@
     </footer>
 
    
-    <script>
-        // CÓDIGO PARA TROCA DE ABAS
-        document.querySelectorAll('.profile-tab').forEach(tab => {
-            tab.addEventListener('click', (event) => {
-                event.preventDefault();
-                document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
-                
-                tab.classList.add('active');
-                const targetId = tab.getAttribute('data-target');
-                document.querySelector(targetId).classList.add('active');
-            });
-        });
+    <script type="module" src="script.js"></script>
 
-        // CÓDIGO PARA O CALENDÁRIO INTERATIVO
-        const prevBtn = document.getElementById('prev-month');
-        const nextBtn = document.getElementById('next-month');
-        const slider = document.getElementById('calendar-slider');
-        const monthYearDisplay = document.getElementById('month-year-display');
-
-        const months = ["Outubro 2025", "Novembro 2025", "Dezembro 2025"];
-        let currentMonthIndex = 0;
-
-        if (prevBtn && nextBtn && slider && monthYearDisplay) {
-            function updateCalendarView() {
-                slider.style.transform = `translateX(-${currentMonthIndex * 100}%)`;
-                monthYearDisplay.textContent = months[currentMonthIndex];
-                prevBtn.disabled = currentMonthIndex === 0;
-                nextBtn.disabled = currentMonthIndex === months.length - 1;
-            }
-
-            nextBtn.addEventListener('click', () => {
-                if (currentMonthIndex < months.length - 1) {
-                    currentMonthIndex++;
-                    updateCalendarView();
-                }
-            });
-
-            prevBtn.addEventListener('click', () => {
-                if (currentMonthIndex > 0) {
-                    currentMonthIndex--;
-                    updateCalendarView();
-                }
-            });
-
-            updateCalendarView();
-        }
-
-        // CÓDIGO PARA O MODAL DE IMAGEM
-        const modal = document.getElementById('img-modal');
-        if (modal) {
-            document.querySelectorAll('.photo-post img').forEach(img => {
-                img.addEventListener('click', () => {
-                    modal.classList.add('active');
-                    modal.querySelector('img').src = img.src;
-                });
-            });
-            modal.addEventListener('click', () => {
-                modal.classList.remove('active');
-            });
-        }
-    </script>
 </body>
 </html>
-
-
