@@ -1,5 +1,10 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+
+import {
+  getDatabase, ref, push, onValue
+} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBqYldHlwEbQnafhHl0lkHVouMgJYHEpB4",
@@ -43,6 +48,7 @@ nextBtn.addEventListener('click', () => {
   if (currentMonthIndex < months.length - 1) {
     currentMonthIndex++;
     updateCalendarView();
+    marcarDiasOcupados();
   }
 });
 
@@ -50,6 +56,7 @@ prevBtn.addEventListener('click', () => {
   if (currentMonthIndex > 0) {
     currentMonthIndex--;
     updateCalendarView();
+    marcarDiasOcupados();
   }
 });
 
@@ -76,7 +83,19 @@ const modalHTML = `
         <option>Cardiologia</option>
         <option>Enfermagem</option>
       </select>
-      <input type="time" id="hora" required style="padding:10px; border-radius:8px; border:1px solid #ccc;">
+
+      <select id="hora" required style="padding:10px; border-radius:8px; border:1px solid #ccc;">
+        <option value="">Selecione o horário</option>
+        <option>08:00</option>
+        <option>09:00</option>
+        <option>10:00</option>
+        <option>11:00</option>
+        <option>13:00</option>
+        <option>14:00</option>
+        <option>15:00</option>
+        <option>16:00</option>
+      </select>
+
       <input type="hidden" id="data-consulta">
       <button type="submit" style="
         background:#009879; color:#fff; padding:12px; border:none;
@@ -99,15 +118,6 @@ modal.addEventListener('click', (e) => {
   if (e.target === modal) modal.style.display = 'none';
 });
 
-document.querySelectorAll('.calendar-dates button.consulta').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const dia = btn.textContent;
-    const mes = months[currentMonthIndex];
-    document.getElementById('data-consulta').value = `${dia} ${mes}`;
-    modal.style.display = 'flex';
-  });
-});
-
 formAgenda.addEventListener('submit', (e) => {
   e.preventDefault();
   const nome = document.getElementById('nome').value.trim();
@@ -125,11 +135,53 @@ formAgenda.addEventListener('submit', (e) => {
     dataConsulta,
     criadoEm: new Date().toISOString()
   }).then(() => {
-    alert(`✅ Consulta agendada com sucesso para ${dataConsulta} às ${hora}!`);
+    alert(`Consulta agendada com sucesso para ${dataConsulta} às ${hora}!`);
     formAgenda.reset();
     modal.style.display = 'none';
+    marcarDiasOcupados();
   }).catch((error) => {
     console.error("Erro ao salvar consulta:", error);
-    alert("❌ Ocorreu um erro ao agendar. Tente novamente.");
+    alert("Ocorreu um erro ao agendar. Tente novamente.");
   });
 });
+
+function marcarDiasOcupados() {
+  const consultasRef = ref(db, 'consultas');
+  onValue(consultasRef, (snapshot) => {
+    const dados = snapshot.val();
+    const diasOcupados = new Set();
+
+    if (dados) {
+      Object.values(dados).forEach(c => {
+        diasOcupados.add(c.dataConsulta);
+      });
+    }
+
+    document.querySelectorAll('.calendar-dates button.consulta').forEach(btn => {
+      const dia = btn.textContent.trim();
+      const mes = months[currentMonthIndex];
+      const dataAtual = `${dia} ${mes}`;
+
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+
+      if (diasOcupados.has(dataAtual)) {
+        newBtn.style.backgroundColor = '#e63946';
+        newBtn.style.color = '#fff';
+        newBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          alert(`O dia ${dataAtual} já está ocupado.`);
+        });
+      } else {
+        newBtn.style.backgroundColor = '';
+        newBtn.style.color = '';
+        newBtn.addEventListener('click', () => {
+          document.getElementById('data-consulta').value = dataAtual;
+          modal.style.display = 'flex';
+        });
+      }
+    });
+  });
+}
+
+marcarDiasOcupados();
