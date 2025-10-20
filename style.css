@@ -62,22 +62,44 @@ header {
     border-bottom: 1px solid var(--borda-clara);
     transition: background-color 0.3s, border-color 0.3s;
 }
-.logo h1 { color: var(--azul-vita); font-size: 1.75rem; font-weight: 700; }
-nav { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+
+        body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: #f8f9fa;
+    color: #222;
+}
+
+header {
+    background: #0078d7;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.logo h1 {
+    margin: 0;
+    font-weight: 700;
+}
+
 nav a {
-    padding: 0.5rem 1rem;
+    color: white;
+    margin-left: 1.5rem;
     text-decoration: none;
     font-weight: 500;
-    color: var(--texto-medio);
-    transition: color 0.3s, background-color 0.3s;
-    border-radius: 99px;
+    transition: opacity 0.3s;
 }
-nav a:hover { color: var(--azul-vita); background-color: #EFF6FF; }
-nav a.active { color: var(--azul-vita); background-color: #DBEAFE; font-weight: 600; }
 
-/* 4. BOTÕES E LINKS */
-.btn {
-    background-image: linear-gradient(to right, var(--azul-vita), var(--azul-escuro));
+nav a:hover {
+    opacity: 0.8;
+}
+ 
+
+.explorar{
+
+     background-image: linear-gradient(to right, var(--azul-vita), var(--azul-escuro));
     color: white;
     padding: 0.8rem 1.8rem;
     border: none;
@@ -86,8 +108,11 @@ nav a.active { color: var(--azul-vita); background-color: #DBEAFE; font-weight: 
     font-weight: 600;
     transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2); /* Sombra soft */
-    display: inline-block;
+    display: inline-b
 }
+
+
+
 .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3); }
 
 .curtir{
