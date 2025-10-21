@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SUSI — Triagem (web)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#F2F3F5; color:#0f172a; }
+
+    .app {
+      width: 100%;
+      max-width: 920px;
+      height: 92vh;
+      margin: 24px auto;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 30px rgba(15,23,42,0.06);
+      display: grid;
+      grid-template-rows: 86px 1fr 84px;
+      overflow: hidden;
+    }
+
+    .header { display:flex; align-items:center; gap:14px; padding: 18px; background: rgba(242,243,245,0.6); }
+    .avatar { width:56px; height:56px; border-radius:50%; background:#3b82f6; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; }
+    .title { line-height:1; }
+    .title h1 { font-size:18px; margin-bottom:4px; }
+    .title p { font-size:12px; color:#475569; }
+
+    .messages { padding: 18px; overflow-y: auto; background: linear-gradient(180deg, #F2F3F5 0%, #F8FAFC 100%); }
+    .messages-inner { max-width:760px; margin: 0 auto; display:flex; flex-direction:column; gap:10px; }
+
+    .bubble-row { display:flex; gap:8px; align-items:flex-end; }
+    .bubble { max-width: 72%; padding:10px 14px; border-radius:14px; line-height:1.35; font-size:14px; word-wrap:break-word; }
+    .bubble.bot { background:#E9EAEB; color:#111827; border-bottom-left-radius:6px; }
+    .bubble.user { background:#0084FF; color:#fff; margin-left:auto; border-bottom-right-radius:6px; text-align:right; }
+    .meta { font-size:11px; color:#94a3b8; margin-top:6px; }
+
+    .typing { display:inline-block; padding:8px 12px; background:#E9EAEB; border-radius:12px; }
+    .dots span { display:inline-block; width:6px; height:6px; margin: 0 2px; background:#64748B; border-radius:50%; animation: blink 1s infinite; opacity:0.9; }
+    .dots span:nth-child(2){ animation-delay: .12s }
+    .dots span:nth-child(3){ animation-delay: .24s }
+    @keyframes blink { 0% { opacity:0.2; transform: translateY(0);} 50% { opacity:1; transform: translateY(-3px);} 100% { opacity:0.2; transform: translateY(0);} }
+
+    .composer { padding: 12px 16px; display:flex; gap:10px; align-items:center; border-top: 1px solid rgba(15,23,42,0.04); background:#fff; }
+    .input { flex:1; display:flex; gap:8px; align-items:center; background:#F8FAFC; padding:8px; border-radius:10px; }
+    .input input { flex:1; border:0; outline:none; background:transparent; padding:10px; font-size:15px; }
+    button.btn { border:0; padding:10px 14px; border-radius:8px; cursor:pointer; font-weight:600; }
+    button.send { background:#0084FF; color:white; }
+    button.clear { background:#F3F4F6; color:#0f172a; }
+
+    @media (max-width:640px) {
+      .app { margin: 10px; height: 94vh; }
+      .messages-inner { max-width:100%; }
+      .bubble { font-size:15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="avatar">DA</div>
+      <div class="title">
+        <h1>SUSI</h1>
+        <p>Triagem de Saúde • Atendimento automatizado</p>
+      </div>
+    </header>
+
+    <section class="messages" id="messages">
+      <div class="messages-inner" id="messagesInner"></div>
+    </section>
+
+    <footer class="composer">
+      <div class="input">
+        <input id="inputMsg" type="text" placeholder="Descreva seus sintomas ou dúvidas..." />
+      </div>
+      <button class="btn clear" id="btnClear">Limpar</button>
+      <button class="btn send" id="btnSend">Enviar</button>
+    </footer>
+  </div>
+
+  <script>
+    const API_KEY = "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"; //troquem essa api key aqui que vota a funcionar. ASS: dj buda
+    const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
+    const REQUEST_TIMEOUT = 30000;
+
+    const messagesInner = document.getElementById("messagesInner");
+    const messagesBox = document.getElementById("messages");
+    const input = document.getElementById("inputMsg");
+    const btnSend = document.getElementById("btnSend");
+    const btnClear = document.getElementById("btnClear");
+
+    function sanitize(str){
+      return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g, "<br/>");
+    }
+
+    function scrollToBottom(){
+      requestAnimationFrame(() => {
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+      });
+    }
+
+    function addBotBubble(text) {
+      const row = document.createElement("div");
+      row.className = "bubble-row";
+      const bubble = document.createElement("div");
+      bubble.className = "bubble bot";
+      bubble.innerHTML = sanitize(text);
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+      const col = document.createElement("div");
+      col.style.display = "flex";
+      col.style.flexDirection = "column";
+      col.appendChild(bubble);
+      col.appendChild(meta);
+      row.appendChild(col);
+      messagesInner.appendChild(row);
+      scrollToBottom();
+    }
+
+    function addUserBubble(text) {
+      const row = document.createElement("div");
+      row.className = "bubble-row";
+      const bubble = document.createElement("div");
+      bubble.className = "bubble user";
+      bubble.textContent = text;
+      const meta = document.createElement("div");
+      meta.className = "meta";
+      meta.textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+      const col = document.createElement("div");
+      col.style.display = "flex";
+      col.style.flexDirection = "column";
+      col.style.alignItems = "flex-end";
+      col.appendChild(bubble);
+      col.appendChild(meta);
+      row.appendChild(col);
+      messagesInner.appendChild(row);
+      scrollToBottom();
+    }
+
+    function showTyping() {
+      const row = document.createElement("div");
+      row.id = "typingRow";
+      row.className = "bubble-row";
+      const typing = document.createElement("div");
+      typing.className = "typing";
+      typing.innerHTML = '<div class="dots"><span></span><span></span><span></span></div>';
+      row.appendChild(typing);
+      messagesInner.appendChild(row);
+      scrollToBottom();
+    }
+
+    function hideTyping() {
+      const r = document.getElementById("typingRow");
+      if (r) r.remove();
+    }
+
+    async function sendMessageToBackend(messageText) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+      const body = {
+        model: "gpt-3.5-turbo",
+        messages: [
+          { role: "system", content: "Você é o SUSI, um assistente de triagem de saúde que ajuda pessoas a entender sintomas e procurar atendimento adequado. Fale sempre em português de forma simpática e clara." },
+          { role: "user", content: messageText }
+        ]
+      };
+
+      try {
+        const res = await fetch(OPENAI_API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify(body),
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+
+        if (!res.ok) {
+          const err = await res.text();
+          throw new Error("Erro: " + res.status + " → " + err);
+        }
+
+        const data = await res.json();
+        return data.choices?.[0]?.message?.content?.trim() || "Sem resposta.";
+      } catch (err) {
+        if (err.name === 'AbortError') throw new Error("Tempo de requisição esgotado.");
+        throw err;
+      }
+    }
+
+    async function handleSend() {
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = "";
+      addUserBubble(text);
+      showTyping();
+      try {
+        const reply = await sendMessageToBackend(text);
+        hideTyping();
+        addBotBubble(reply);
+      } catch (err) {
+        hideTyping();
+        addBotBubble("Erro ao conectar com a API: " + err.message);
+      }
+    }
+
+    btnSend.addEventListener("click", handleSend);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    });
+    btnClear.addEventListener("click", () => {
+      messagesInner.innerHTML = "";
+      addBotBubble("Olá! Sou o SUSI. Descreva seus sintomas ou dúvidas sobre saúde.");
+    });
+
+    addBotBubble("Olá! Sou o SUSI. Descreva seus sintomas ou dúvidas sobre saúde.");
+  </script>
+</body>
+</html>
