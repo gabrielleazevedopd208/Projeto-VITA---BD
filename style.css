@@ -150,30 +150,61 @@ nav a:hover {
 .card-icon { color: var(--verde-saude); width: 48px; height: 48px; margin-bottom: 1rem; }
 
 /* 6. ESTILOS ESPECÍFICOS DAS PÁGINAS */
-.hero { text-align: center; padding: 2rem 1rem; }
-.hero-img{
-
-background: url("https://58b04f5940c1474e557e363a.redesign.static-01.com/l/images/f019c986796f198a8898bbe7825c83e35697834f.png")
+.hero-teste {
+  background: url("https://58b04f5940c1474e557e363a.redesign.static-01.com/l/images/f019c986796f198a8898bbe7825c83e35697834f.png") 
               no-repeat center center/cover;
- display: flex;
- justify-content: center; /* Centraliza horizontalmente */
- align-items: center;     /* Centraliza verticalmente */
- min-height: 100vh;  
- padding: 200px;
- padding-left: 10%;
- padding-right: 10%;
- padding-top: 50px;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  margin-top: 80px; /* espaçamento do cabeçalho fixo */
+  
 }
 
-.hero-item{
-    align-items: center;
-    text-align: center;
+.hero-teste::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
 }
 
-.explorar{
-align-items: center;
-
+.hero-text {
+  position: relative;
+  color: #1F2937;
+  max-width: 800px;
+  padding: 20px;
 }
+
+.hero-text h1 {
+  font-size: 2.8rem;
+  margin-bottom: 15px;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.hero-button a {
+  background-image: linear-gradient(to right, var(--azul-vita), var(--azul-escuro));
+    color: white;
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 99px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 10px rgba(59, 131, 246, 0.137); /* Sombra soft */
+    display: inline-block;
+  transition: background 0.3s;
+}
+
+.hero-button a:hover {
+  background:#1E40AF;
+}
+
 
 /* Profissionais */
 .professional-card { text-align: center; }
