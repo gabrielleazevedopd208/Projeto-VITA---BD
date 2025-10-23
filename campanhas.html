@@ -21,6 +21,10 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1rem 2rem;
+    /* --- CORREÇÃO: Adicionado para igualar aos outros headers --- */
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo h1 {
@@ -143,6 +147,49 @@ footer {
     font-size: 0.9rem;
     color: #555;
 }
+
+/* --- CORREÇÃO: Adicionado CSS de responsividade para igualar às outras páginas --- */
+@media (max-width: 900px) {
+    header {
+        position: static;
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.25rem;
+    }
+
+    nav a {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.85rem;
+        margin-left: 0.25rem; /* Reduzido para caber */
+    }
+    
+    nav a.active {
+        border-bottom: none; /* Remove a borda no mobile */
+    }
+
+    .logo h1 {
+        font-size: 1.5rem;
+    }
+
+    /* Ajustes de layout da página */
+    .page-title {
+        font-size: 2rem;
+    }
+    .page-subtitle {
+        font-size: 1rem;
+    }
+    .campaign-grid {
+        padding: 1rem; /* Menos preenchimento no mobile */
+    }
+}
+
     </style>
 </head>
 
@@ -165,7 +212,6 @@ footer {
             <p class="page-subtitle">Fique por dentro das ações de prevenção e vacinação em Bom Despacho para cuidar da sua saúde e de quem você ama.</p>
         </div>
 
-        <!-- Campanhas Ativas -->
         <h3 class="section-title">Campanhas Ativas</h3>
         <div class="campaign-grid">
 
@@ -196,7 +242,7 @@ footer {
             </div>
 
             <div class="card campaign-card">
-                <img src="https://img.freepik.com/premium-psd/novembro-azul-combate-ao-cancer-de-prostata-blue-november-fight-cancer_927563-834.jpg?w=1380" alt="Campanha Novembro Azul">
+                <img src="https://img.freepik.com/premium-psd/novembro-azul-combate-ao-cancer-de-prostata-blue-november-fight-cancer_927563-834.jpg?w=1380" alt="Novembro Azul">
                 <div class="campaign-content">
                     <div class="campaign-header">
                         <h3>Novembro Azul — Saúde do Homem</h3>
